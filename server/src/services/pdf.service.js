@@ -1,15 +1,23 @@
 import { getBrowser } from './browser.service.js';
 import { PDF_OPTIONS, TIMEOUTS, VIEWPORT, CLEANUP_CSS } from '../config/pdf.config.js';
-
+import { createLimiter } from '../utils/createLimiter.js';
+import { env } from '../config/env.js';
+import { installRequestGuard } from '../utils/requestGuard.js';
+const limit = createLimiter({
+  maxConcurrent: env.maxConcurrentPdfs,
+  maxQueue: env.maxQueuedPdfs,
+});
 // Page ko neeche tak scroll karo taaki lazy content render ho jaye,
 // phir saari images load hone ka wait karo (max 15s)
 async function loadLazyContent(page) {
   await page.evaluate(async () => {
     const step = 600;
     let y = 0;
-    while (y < document.documentElement.scrollHeight) {
+    let steps = 0;
+    while (y < document.documentElement.scrollHeight && steps < 300) {
       window.scrollTo(0, y);
       y += step;
+      steps++;
       await new Promise((r) => setTimeout(r, 150));
     }
     window.scrollTo(0, 0);
@@ -29,7 +37,7 @@ async function loadLazyContent(page) {
     await Promise.race([waitForImages, timeout]);
   });
 }
-export async function generatePdf(url) {
+ async function renderPdf(url) {
   const browser = await getBrowser();
   const page = await browser.newPage(); // har request ka apna tab
 
@@ -38,7 +46,7 @@ export async function generatePdf(url) {
     await page.emulateMediaFeatures([
       { name: 'prefers-color-scheme', value: 'light' },
     ]);
-
+    await installRequestGuard(page);
     await page.goto(url, { waitUntil: 'networkidle2', timeout: TIMEOUTS.navigation });
 
     // Chat render hone ka wait
@@ -83,4 +91,8 @@ export async function generatePdf(url) {
   } finally {
     await page.close(); // error aaye ya na aaye, tab band
   }
+}
+// Bahar ke code ko yahi function dikhta hai: limit ke saath
+export function generatePdf(url) {
+  return limit(() => renderPdf(url));
 }
