@@ -12,7 +12,7 @@ export function validateShareUrl(input) {
   try {
     url = new URL(input.trim());
   } catch {
-    throw new AppError('Ye valid URL nahi hai', 400);
+    throw new AppError('url not valid', 400);
   }
 
   const isAllowed =
@@ -22,7 +22,7 @@ export function validateShareUrl(input) {
 
   if (!isAllowed) {
     throw new AppError(
-      'Sirf https://chatgpt.com/share/<id> format ka link allowed hai',
+      'only https://chatgpt.com/share/<id> format is allowed',
       400
     );
   }

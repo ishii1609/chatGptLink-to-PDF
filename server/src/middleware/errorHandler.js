@@ -3,7 +3,7 @@ export function errorHandler(err, req, res, next) {
   // Puppeteer timeout ko 504 mein badlo
   if (err.name === 'TimeoutError') {
     return res.status(504).json({
-      error: 'Link khulne mein bahut time laga. Link private/expired ho sakta hai.',
+      error: 'link private/expired',
     });
   }
 
@@ -13,6 +13,6 @@ export function errorHandler(err, req, res, next) {
   if (status === 500) console.error(err);
 
   res.status(status).json({
-    error: status === 500 ? 'Server mein kuch gadbad hui.' : err.message,
+    error: status === 500 ? 'something went wrong' : err.message,
   });
 }

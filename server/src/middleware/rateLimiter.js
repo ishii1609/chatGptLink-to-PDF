@@ -7,5 +7,5 @@ export const convertLimiter = rateLimit({
   max: env.rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Bahut zyada requests. Thodi der baad try karo.' },
+  message: { error: 'too many requests.Please try again later.' },
 });
