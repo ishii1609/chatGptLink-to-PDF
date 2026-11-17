@@ -71,7 +71,12 @@ export async function installRequestGuard(page) {
   page.on('request', async (request) => {
     try {
       if (await isRequestAllowed(request)) await request.continue();
-      else await request.abort('blockedbyclient');
+           if (await isRequestAllowed(request)) {
+        await request.continue();
+      } else {
+        console.error('[guard] blocked:', request.url());
+        await request.abort('blockedbyclient');
+      }
     } catch {
       // request pehle hi handle ho chuki ho sakti hai, ignore
     }

@@ -40,7 +40,7 @@ async function loadLazyContent(page) {
  async function renderPdf(url) {
   const browser = await getBrowser();
   const page = await browser.newPage(); // har request ka apna tab
-
+  const started = Date.now();
   try {
     await page.setViewport(VIEWPORT);
     await page.emulateMediaFeatures([
@@ -88,7 +88,20 @@ async function loadLazyContent(page) {
     await loadLazyContent(page);
     
     return await page.pdf(PDF_OPTIONS); // file nahi, buffer
-  } finally {
+  }
+  catch (err) {
+    console.error(`[pdf] failed after ${Date.now() - started}ms:`, err.name, err.message);
+    try {
+      console.error('[pdf] url  :', page.url());
+      console.error('[pdf] title:', await page.title());
+      const text = await page.evaluate(() => document.body?.innerText?.slice(0, 300));
+      console.error('[pdf] body :', text);
+    } catch {
+      // page hi band ho gaya ho to ignore
+    }
+    throw err;
+  }
+  finally {
     await page.close(); // error aaye ya na aaye, tab band
   }
 }

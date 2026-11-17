@@ -7,7 +7,7 @@ COPY client/ ./
 RUN npm run build
 
 # ---- Stage 2: Server + Chromium ----
-FROM node:20-slim
+FROM node:22-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
       chromium fonts-liberation fonts-noto-core fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/*
