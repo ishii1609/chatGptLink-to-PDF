@@ -4,6 +4,7 @@ export const PDF_OPTIONS = {
   format: 'A4',
   printBackground: true,
   margin: { top: '15mm', bottom: '15mm', left: '12mm', right: '12mm' },
+   timeout: 120000, // page.pdf() ka default 30s slow CPU pe kam padega
 };
 
 export const TIMEOUTS = {

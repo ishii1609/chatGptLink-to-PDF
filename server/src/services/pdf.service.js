@@ -47,7 +47,7 @@ async function loadLazyContent(page) {
       { name: 'prefers-color-scheme', value: 'light' },
     ]);
     await installRequestGuard(page);
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: TIMEOUTS.navigation });
+   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUTS.navigation });
 
     // Chat render hone ka wait
     await page.waitForSelector('main', { timeout: TIMEOUTS.render });
