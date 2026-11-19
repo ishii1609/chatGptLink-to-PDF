@@ -12,7 +12,7 @@ export const TIMEOUTS = {
   render: 30000,
 };
 
-export const VIEWPORT = { width: 1200, height: 900 };
+export const VIEWPORT = { width: 900, height: 800 };
 
 // Page ko PDF ke layak banane wali CSS
 export const CLEANUP_CSS = `

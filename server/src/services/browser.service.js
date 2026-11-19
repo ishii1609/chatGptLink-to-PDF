@@ -7,11 +7,16 @@ export function getBrowser() {
    browserPromise = puppeteer.launch({
   headless: true,
   executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
-  args: [
-    '--no-sandbox',            // container mein root user ke liye zaroori
+    args: [
+    '--no-sandbox',
     '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage', // chhote /dev/shm se crash bachata hai
+    '--disable-dev-shm-usage',
     '--disable-gpu',
+    '--no-zygote',                      // extra helper process kam
+    '--disable-extensions',
+    '--disable-background-networking',
+    '--disable-features=site-per-process,IsolateOrigins', // kam renderer processes
+    '--js-flags=--max-old-space-size=192',
   ],
 }).catch((err) => {
       browserPromise = null; // launch fail hua to dobara try ho sake

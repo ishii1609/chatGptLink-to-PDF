@@ -3,7 +3,7 @@ import { PDF_OPTIONS, TIMEOUTS, VIEWPORT, CLEANUP_CSS } from '../config/pdf.conf
 import { createLimiter } from '../utils/createLimiter.js';
 import { env } from '../config/env.js';
 import { installRequestGuard } from '../utils/requestGuard.js';
-
+    await page.setRequestInterception(true);
 const limit = createLimiter({
   maxConcurrent: env.maxConcurrentPdfs,
   maxQueue: env.maxQueuedPdfs,
