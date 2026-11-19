@@ -3,7 +3,7 @@ import { PDF_OPTIONS, TIMEOUTS, VIEWPORT, CLEANUP_CSS } from '../config/pdf.conf
 import { createLimiter } from '../utils/createLimiter.js';
 import { env } from '../config/env.js';
 import { installRequestGuard } from '../utils/requestGuard.js';
-    await page.setRequestInterception(true);
+   
 const limit = createLimiter({
   maxConcurrent: env.maxConcurrentPdfs,
   maxQueue: env.maxQueuedPdfs,
@@ -65,7 +65,7 @@ async function renderPdf(url) {
       { name: 'prefers-color-scheme', value: 'light' },
     ]);
     await installRequestGuard(page);
-
+    await page.setRequestInterception(true);
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUTS.navigation });
 
     // Network thoda shaant hone do, par zyada der nahi (fail ho to aage badho)
